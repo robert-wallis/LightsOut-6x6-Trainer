@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcdy70762tqxt"]
+
+[ext_resource type="Script" path="res://Light.gd" id="1_4mqpa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7qk38"]
+bg_color = Color(1, 0.34902, 0.207843, 1)
+
+[node name="Button" type="Button"]
+custom_minimum_size = Vector2(80, 80)
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7qk38")
+toggle_mode = true
+script = ExtResource("1_4mqpa")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]
