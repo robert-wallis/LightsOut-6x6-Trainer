@@ -1,0 +1,16 @@
+{
+  "name": "LightsOut",
+  "source": "index.js",
+  "dependencies": {
+    "parcel": "^2.11.0",
+    "vue": "^3.4.19"
+  },
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "private": true,
+  "devDependencies": {
+    "@parcel/transformer-vue": "^2.11.0"
+  }
+}
