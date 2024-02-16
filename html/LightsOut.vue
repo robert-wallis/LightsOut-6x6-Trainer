@@ -4,7 +4,12 @@ import { reactive } from 'vue';
 const BOARD_WIDTH = 6;
 const BOARD_HEIGHT = 6;
 
-let cells = reactive(Array.from({ length: BOARD_WIDTH * BOARD_HEIGHT }, (_, i) => ({ id: i, active: false })));
+let cells = reactive(Array.from({ length: BOARD_WIDTH * BOARD_HEIGHT }, (_, i) => (
+    {
+        id: i,
+        active: false
+    }
+)));
 let setupCustomBoard = reactive(false);
 
 function toggleCell(cell) {
@@ -31,6 +36,12 @@ function toggleAdjacent(cell) {
     }
 }
 
+function randomizeBoard() {
+    cells.forEach(cell => {
+        cell.active = Math.random() > 0.5;
+    });
+}
+
 </script>
 
 <template>
@@ -39,6 +50,7 @@ function toggleAdjacent(cell) {
         <input type="checkbox" v-model="setupCustomBoard" />
         Setup Custom Board
     </label>
+    <button @click="randomizeBoard">Randomize</button>
     <div class="grid">
         <div class="cell" v-for="cell in cells" :class="{ active: cell.active }" @click="toggleCell(cell)">
             {{ cell.id + 1 }}
