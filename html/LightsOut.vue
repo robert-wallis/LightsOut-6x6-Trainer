@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 
 const BOARD_WIDTH = 6;
 const BOARD_HEIGHT = 6;
@@ -10,9 +10,14 @@ let cells = reactive(Array.from({ length: BOARD_WIDTH * BOARD_HEIGHT }, (_, i) =
     clickMe: false,
     phase2Clicked: false,
 })));
-let setupCustomBoard = reactive(false);
-let showHints = reactive(true);
-let strategyPhase = reactive(1);
+
+let model = reactive({
+    setupCustomBoard: false,
+    showHints: true,
+    strategyPhase: 1,
+});
+
+watch(model.showHints, calculateHints);
 
 function onCellClick(cell) {
     toggleCell(cells[cell.id]);
@@ -21,7 +26,7 @@ function onCellClick(cell) {
 
 function toggleCell(cell) {
     cell.active = !cell.active;
-    if (strategyPhase === 2) {
+    if (model.strategyPhase === 2) {
         if (!cell.clickMe) {
             // bad click, please undo
             cell.clickMe = true;
@@ -29,7 +34,7 @@ function toggleCell(cell) {
             cell.phase2Clicked = !cell.phase2Clicked;
         }
     }
-    if (!setupCustomBoard) {
+    if (!model.setupCustomBoard) {
         toggleAdjacent(cell);
     }
 }
@@ -90,9 +95,17 @@ function cellDown(ofId) {
 
 
 function randomizeBoard() {
-    strategyPhase = 1;
+    model.strategyPhase = 1;
     cells.forEach(cell => {
         cell.active = Math.random() > 0.5;
+    });
+    calculateHints();
+}
+
+function clearBoard() {
+    model.strategyPhase = 1;
+    cells.forEach(cell => {
+        cell.active = false;
     });
     calculateHints();
 }
@@ -100,7 +113,7 @@ function randomizeBoard() {
 function calculateHints() {
     // clear all hints
     cells.forEach(cell => {
-        if (strategyPhase === 2) {
+        if (model.strategyPhase === 2) {
             // don't clear the top row if we are in phase 3
             if (cell.id >= BOARD_WIDTH) {
                 cell.clickMe = false;
@@ -111,7 +124,7 @@ function calculateHints() {
         }
     });
 
-    if (strategyPhase === 2) {
+    if (model.strategyPhase === 2) {
         var allPhase2Clicked = true;
         for (let i = 0; i < BOARD_WIDTH; i++) {
             if (cells[i].clickMe) {
@@ -121,7 +134,7 @@ function calculateHints() {
             }
         }
         if (allPhase2Clicked) {
-            strategyPhase = 3;
+            model.strategyPhase = 3;
             for (let i = 0; i < BOARD_WIDTH; i++) {
                 cells[i].clickMe = false;
             }
@@ -151,7 +164,7 @@ function calculateHints() {
 
     // last row clear strategy
     if (topDownClear) {
-        strategyPhase = 2;
+        model.strategyPhase = 2;
         let row = BOARD_HEIGHT - 1;
         var anyActive = false;
         var idsToTick = [];
@@ -182,9 +195,9 @@ function calculateHints() {
             anyPhase2Ticked = true;
         }
         if (anyPhase2Ticked) {
-            strategyPhase = 2;
+            model.strategyPhase = 2;
         } else {
-            strategyPhase = 3;
+            model.strategyPhase = 3;
         }
 
         var allClear = true;
@@ -194,7 +207,7 @@ function calculateHints() {
             }
         });
         if (allClear) {
-            strategyPhase = 1;
+            model.strategyPhase = 1;
             cells.forEach(cell => cell.clickMe = false);
         }
     }
@@ -223,13 +236,13 @@ function topRowCellsForBottomRowCell(cellId) {
     <h1>6x6 Trainer</h1>
     <div>
         <label title="allows clicking one cell without affecting others">
-            <input type="checkbox" v-model="setupCustomBoard" />
+            <input type="checkbox" v-model="model.setupCustomBoard" />
             Setup Custom Board
         </label>
     </div>
     <div>
         <label>
-            <input type="checkbox" v-model="showHints" />
+            <input type="checkbox" v-model="model.showHints" />
             Show Hints
         </label>
         <button @click="calculateHints">Calculate Hints</button>
@@ -237,20 +250,27 @@ function topRowCellsForBottomRowCell(cellId) {
     <div>
         <button @click="randomizeBoard">Randomize</button>
     </div>
-    <h2>Strategy Phase: {{ strategyPhase }}</h2>
-    <p v-if="strategyPhase == 1">
-       First click all the cells one below the topmost active cell. 
-    </p>
-    <p v-if="strategyPhase == 2">
-       Now click the top row cells that are marked. 
-    </p>
-    <p v-if="strategyPhase == 3">
-       Finally, do the same strategy as in phase 1, but this time it will be clear at the bottom if you did it right. 
-    </p>
-    <div class="grid">
-        <div class="cell" v-for="cell in cells" :class="{ active: cell.active }" @click="onCellClick(cell)">
-            <div class="cellName">{{ cell.id + 1 }}</div>
-            <div class="clickMe" :class="{ active: cell.clickMe && showHints, phase2Clicked: cell.phase2Clicked }"></div>
+    <div>
+        <button @click="clearBoard">Clear</button>
+    </div>
+    <div class="trainer">
+        <div class="tips">
+            <h2>Strategy Phase: {{ model.strategyPhase }}</h2>
+            <p v-if="model.strategyPhase == 1">
+               First click all the cells one below the topmost active cell. 
+            </p>
+            <p v-if="model.strategyPhase == 2">
+               Now click the top row cells that are marked. 
+            </p>
+            <p v-if="model.strategyPhase == 3">
+               Finally, do the same strategy as in phase 1, but this time it will be clear at the bottom if you did it right. 
+            </p>
+        </div>
+        <div class="grid">
+            <div class="cell" v-for="cell in cells" :class="{ active: cell.active }" @click="onCellClick(cell)">
+                <div class="cellName">{{ cell.id + 1 }}</div>
+                <div class="clickMe" :class="{ active: model.showHints && cell.clickMe, phase2Clicked: model.showHints && cell.phase2Clicked }"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -259,10 +279,18 @@ function topRowCellsForBottomRowCell(cellId) {
     body {
         font-family: ui-sans-serif, system-ui;
     }
+    .trainer {
+        display: flex;
+        flex-direction: row;
+        width: 800px;
+    }
+    .tips {
+    }
     .grid {
         display: flex;
         flex-wrap: wrap;
         width: calc(84px * 6);
+        min-width: calc(84px * 6);
     }
     .cell {
         position: relative;
