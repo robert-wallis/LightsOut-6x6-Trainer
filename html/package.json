@@ -1,14 +1,14 @@
 {
   "name": "LightsOut",
-  "source": "src/index.html",
+  "source": "src/index.js",
   "dependencies": {
     "parcel": "^2.11.0",
     "vue": "^3.4.19"
   },
   "scripts": {
-    "start": "parcel",
+    "dev": "parcel serve --target dev",
     "clean": "rm -rf dist/",
-    "build": "npm run clean && parcel build --no-source-maps && echo now run 'npm run deploy' to copy to docs/ folder",
+    "build": "npm run clean && parcel build --target default && npm run deploy",
     "deploy": "rm -rf ../docs/* && cp -rv dist/* ../docs"
   },
   "private": true,
@@ -16,5 +16,19 @@
     "@parcel/transformer-vue": "^2.11.0",
     "@parcel/transformer-yaml": "^2.11.0",
     "parcel-reporter-static-files-copy": "^1.5.3"
-  }
+  },
+  "targets": {
+    "default": {
+      "sourceMap": false,
+      "source": "src/index.html",
+      "publicUrl": "/LightsOut-6x6-Trainer/",
+      "distDir": "dist"
+    },
+    "dev": {
+      "sourceMap": true,
+      "source": "src/index.html",
+      "publicUrl": "/",
+      "distDir": "dist"
+    }
+  }  
 }

@@ -17,6 +17,7 @@ let model = reactive({
     strategyPhase: 1,
 });
 
+randomizeBoard();
 watch(model.showHints, calculateHints);
 
 function onCellClick(cell) {
@@ -233,12 +234,18 @@ function topRowCellsForBottomRowCell(cellId) {
 </script>
 
 <template>
-    <h1>6x6 Trainer</h1>
+    <h1>6x6 Lights Out Trainer</h1>
+    <p>Solve the 6x6 Lights Out puzzle every time, even if it's random in this 3 stage process.</p>
+    <p>This puzzle is used in the bank in Nopixel 4.0 RP.</p>
+    <div>
+        <button @click="randomizeBoard">Randomize</button>
+    </div>
     <div>
         <label title="allows clicking one cell without affecting others">
             <input type="checkbox" v-model="model.setupCustomBoard" />
             Setup Custom Board
         </label>
+        <button @click="clearBoard">Clear</button>
     </div>
     <div>
         <label>
@@ -246,12 +253,6 @@ function topRowCellsForBottomRowCell(cellId) {
             Show Hints
         </label>
         <button @click="calculateHints">Calculate Hints</button>
-    </div>
-    <div>
-        <button @click="randomizeBoard">Randomize</button>
-    </div>
-    <div>
-        <button @click="clearBoard">Clear</button>
     </div>
     <div class="trainer">
         <div class="tips">
@@ -273,11 +274,17 @@ function topRowCellsForBottomRowCell(cellId) {
             </div>
         </div>
     </div>
+    <footer>Copyright &copy; 2024 <a href="https://smilingrob.com/">Robert Wallis</a></footer>
 </template>
 
 <style>
     body {
         font-family: ui-sans-serif, system-ui;
+        background-color: #222;
+        color: #EEE;
+    }
+    a {
+        color: #33db33;
     }
     .trainer {
         display: flex;
