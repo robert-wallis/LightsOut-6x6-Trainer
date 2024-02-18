@@ -265,13 +265,39 @@ function topRowCellsForBottomRowCell(cellId) {
         <div class="tips">
             <h2>Strategy Phase: {{ model.strategyPhase }}</h2>
             <p v-if="model.strategyPhase == 1">
-               First click all the cells one below the topmost active cell. 
+               Starting from the top, find a highlighted square (green).  Click the square under that square to clear it.  Repeat until you only have highlighted squares at the bottom.
             </p>
-            <p v-if="model.strategyPhase == 2">
-               Now click the top row cells that are marked. 
-            </p>
+            <div v-if="model.strategyPhase == 2">
+                <p>Now is the hard part.  You basically have to memorize this pattern.  For every square left on the bottom, you need to click one or two squares on the top.</p>
+                <ul>
+                    <li>
+                        1 on bottom: check 1 and 3 on top
+                        <img class="tip" src="./tip-phase2-1.svg" alt="Arrow from first box to first and third box." title="1 on bottom: check 1 and 3 on top" />
+                    </li>
+                    <li>
+                        2 on bottom: check 4 on top
+                        <img class="tip" src="./tip-phase2-2.svg" alt="Arrow from second box to the fourth box." title="2 on bottom: check 4 on top" />
+                    </li>
+                    <li>
+                        3 on bottom: check 1 and 5 on top
+                        <img class="tip" src="./tip-phase2-3.svg" alt="Arrow from third box to first and fifth box." title="3 on bottom: check 1 and 5 on top" />
+                    </li>
+                    <li>
+                        4 on bottom: check 2 and 6 on top
+                        <img class="tip" src="./tip-phase2-4.svg" alt="Arrow from fourth box to second and sixth box." title="4 on bottom: check 2 and 6 on top" />
+                    </li>
+                    <li>
+                        5 on bottom: check 3 on top
+                        <img class="tip" src="./tip-phase2-5.svg" alt="Arrow from fifth box to the third box." title="5 on bottom: check 3 on top" />
+                    </li>
+                    <li>
+                        6 on bottom: check 4 and 6 on top
+                        <img class="tip" src="./tip-phase2-6.svg" alt="Arrow from sixth box to fourth and sixth box." title="6 on bottom: check 4 and 6 on top" />
+                    </li>
+                </ul>
+            </div>
             <p v-if="model.strategyPhase == 3">
-               Finally, do the same strategy as in phase 1, but this time it will be clear at the bottom if you did it right. 
+               Finally, do the same strategy as in phase 1, click the box below the highlighted one, but this time it will be clear at the bottom if you did it right.
             </p>
         </div>
         <div class="grid">
@@ -321,12 +347,21 @@ function topRowCellsForBottomRowCell(cellId) {
         width: 800px;
     }
     .tips {
+        background-color: #181818;
+        padding: 10px;
+    }
+    img.tip {
+        display: block;
+        width: 120px;
+        padding: 4px;
     }
     .grid {
         display: flex;
         flex-wrap: wrap;
         width: calc(84px * 6);
         min-width: calc(84px * 6);
+        height: calc(84px * 6);
+        min-height: calc(84px * 6);
     }
     .cell {
         position: relative;
