@@ -1,34 +1,17 @@
 {
   "name": "LightsOut",
-  "source": "src/index.js",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "deploy": "vite build && rm -rf ../docs/* && cp -rv dist/* ../docs"
+  },
   "dependencies": {
-    "parcel": "^2.11.0",
     "vue": "^3.4.19"
   },
-  "scripts": {
-    "dev": "parcel serve --target dev",
-    "clean": "rm -rf dist/",
-    "build": "npm run clean && parcel build --target dist && npm run deploy",
-    "deploy": "rm -rf ../docs/* && cp -rv dist/* ../docs"
-  },
-  "private": true,
   "devDependencies": {
-    "@parcel/transformer-vue": "^2.11.0",
-    "@parcel/transformer-yaml": "^2.11.0",
-    "parcel-reporter-static-files-copy": "^1.5.3"
-  },
-  "targets": {
-    "dist": {
-      "sourceMap": false,
-      "source": "src/index.html",
-      "publicUrl": "/LightsOut-6x6-Trainer/",
-      "distDir": "dist"
-    },
-    "dev": {
-      "sourceMap": true,
-      "source": "src/index.html",
-      "publicUrl": "/",
-      "distDir": "dist"
-    }
-  }  
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.1.3"
+  }
 }
