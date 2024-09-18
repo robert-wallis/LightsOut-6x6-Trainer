@@ -1,3 +1,7 @@
 node_modules/
 .parcel-cache/
 dist/
+
+# ignore package-lock.json because this app does not require specific versions
+package-lock.json
+
